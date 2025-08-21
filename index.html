@@ -1,0 +1,224 @@
+# Home-test
+Home test food
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PKN Food</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #ff9f1c, #ff4040);
+      color: white;
+      text-align: center;
+    }
+    header {
+      padding: 40px 20px;
+      background: rgba(0,0,0,0.5);
+    }
+    header h1 {
+      font-size: 2.5em;
+      margin: 0;
+    }
+    header img {
+      width: 120px;
+      border-radius: 50%;
+      margin-bottom: 15px;
+      border: 4px solid white;
+    }
+    main {
+      padding: 20px;
+    }
+    .order-box {
+      background: white;
+      color: black;
+      padding: 25px;
+      border-radius: 12px;
+      max-width: 400px;
+      margin: auto;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .order-box:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+    .order-box h2 {
+      margin-bottom: 15px;
+    }
+    .order-box input, .order-box select, .order-box textarea, .order-box button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: none;
+      font-size: 1em;
+    }
+    .order-box button {
+      background: #ff4040;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+      animation: pulse 2s infinite;
+    }
+    .order-box button:hover {
+      background: #e52d2d;
+      transform: scale(1.05);
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    .price {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    /* Countdown Timer */
+    .countdown {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #fff700;
+      margin: 10px 0;
+    }
+    /* Limited Stock Alert */
+    .stock-alert {
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #ff0;
+      margin: 10px 0;
+    }
+    /* Floating WhatsApp banner */
+    .whatsapp-banner {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #25D366;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      z-index: 999;
+      transition: transform 0.3s;
+    }
+    .whatsapp-banner:hover {
+      transform: scale(1.1);
+    }
+  </style>
+  <script>
+    let stock = 10; // initial stock
+
+    function updatePrice() {
+      let qty = document.getElementById("quantity").value;
+      let price = qty * 80;
+      document.getElementById("price").innerText = "Total: ₹" + price;
+    }
+
+    function sendOrder() {
+      let name = document.getElementById("name").value;
+      let phone = document.getElementById("phone").value;
+      let address = document.getElementById("address").value;
+      let qty = document.getElementById("quantity").value;
+      let total = qty * 80;
+
+      if(!name || !phone || !address) {
+        alert("Please fill all details!");
+        return;
+      }
+
+      if(qty > stock) {
+        alert("Sorry, only " + stock + " pockets left!");
+        return;
+      }
+
+      stock -= qty; // reduce stock
+      updateStock();
+
+      let message = `🍽 PKN Food Order 🍽\n\n👤 Name: ${name}\n📞 Phone: ${phone}\n🏠 Address: ${address}\n🍛 Quantity: ${qty} Pockets\n💰 Total: ₹${total}`;
+      
+      let url = "https://wa.me/916371764660?text=" + encodeURIComponent(message);
+      window.open(url, "_blank");
+
+      setTimeout(() => {
+        window.location.href = "thankyou.html";
+      }, 2000);
+    }
+
+    // Countdown Timer for urgency
+    let timeLeft = 3600; // 1 hour countdown
+    function updateCountdown() {
+      let hours = Math.floor(timeLeft / 3600);
+      let minutes = Math.floor((timeLeft % 3600) / 60);
+      let seconds = timeLeft % 60;
+      document.getElementById("countdown").innerText = `⏰ Order within: ${hours}h ${minutes}m ${seconds}s`;
+      if(timeLeft > 0) {
+        timeLeft--;
+        setTimeout(updateCountdown, 1000);
+      }
+    }
+
+    // Update stock alert dynamically
+    function updateStock() {
+      document.getElementById("stock-alert").innerText = `⚠️ Only ${stock} pockets left! Hurry!`;
+    }
+
+    // Simulate random stock decrease for urgency
+    setInterval(() => {
+      if(stock > 1) {
+        stock -= Math.floor(Math.random() * 2); // reduce 0 or 1 pockets randomly
+        updateStock();
+      }
+    }, 15000); // every 15 seconds
+
+    // WhatsApp Banner Quick Order
+    function quickOrder() {
+      window.open("https://wa.me/916371764660?text=🍽 Quick%20Order%20from%20PKN%20Food", "_blank");
+    }
+
+    window.onload = () => {
+      updateCountdown();
+      updateStock();
+    };
+  </script>
+</head>
+<body>
+  <header>
+    <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png" alt="PKN Food Logo">
+    <h1>PKN Food</h1>
+    <p>🔥 Order before it’s gone! Limited pockets available daily 🔥</p>
+  </header>
+  <main>
+    <div class="order-box">
+      <h2>Order Your Biryani</h2>
+      <input type="text" id="name" placeholder="Your Name" required>
+      <input type="text" id="phone" placeholder="Phone Number" required>
+      <textarea id="address" placeholder="Delivery Address" required></textarea>
+      <label for="quantity">Choose Pockets (max 10):</label>
+      <select id="quantity" onchange="updatePrice()">
+        <option value="1">1 Pocket</option>
+        <option value="2">2 Pockets</option>
+        <option value="3">3 Pockets</option>
+        <option value="4">4 Pockets</option>
+        <option value="5">5 Pockets</option>
+        <option value="6">6 Pockets</option>
+        <option value="7">7 Pockets</option>
+        <option value="8">8 Pockets</option>
+        <option value="9">9 Pockets</option>
+        <option value="10">10 Pockets</option>
+      </select>
+      <p id="price" class="price">Total: ₹80</p>
+      <p class="stock-alert" id="stock-alert"></p>
+      <button onclick="sendOrder()">Order Now via WhatsApp</button>
+      <p class="countdown" id="countdown"></p>
+    </div>
+  </main>
+
+  <!-- Floating WhatsApp Quick Order -->
+  <div class="whatsapp-banner" onclick="quickOrder()">💬 Quick Order</div>
+</body>
+          </html>
